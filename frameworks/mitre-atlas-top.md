@@ -29,7 +29,7 @@ Format mirrors ATT&CK: techniques are grouped by tactic and tagged with their AT
 Attacker reads model cards, papers, and blog posts to identify weaknesses in a target's AI stack before any active probe.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (do not publish system prompt internals)
+- `core-ai/ai-guardrails.md` §3 (do not publish system prompt internals)
 
 ---
 
@@ -38,7 +38,7 @@ Attacker reads model cards, papers, and blog posts to identify weaknesses in a t
 Attacker probes the deployed AI system with crafted queries to identify model behaviour, decision boundaries, or system prompt fragments.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §7 (Alert on anomalous AI usage patterns)
+- `core-ai/ai-guardrails.md` §7 (Alert on anomalous AI usage patterns)
 - `web-app-ai/checklist.md` §11 (Alerts on threshold breaches)
 
 ---
@@ -50,7 +50,7 @@ Attacker probes the deployed AI system with crafted queries to identify model be
 Attacker compromises a model, dataset, or ML library before it reaches the target the AI-equivalent of a software supply chain attack.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (Treat third-party models as untrusted)
+- `core-ai/ai-guardrails.md` §3 (Treat third-party models as untrusted)
 - `web-app-ai/checklist.md` §10 (Dependency CVE scan, SBOM)
 - `web-app-ai/attack-scenarios.md` Scenario 9
 
@@ -73,7 +73,7 @@ Attacker uses the public inference API as their probe surface: black-box extract
 
 **Mapped checklist items:**
 - `web-app-ai/checklist.md` §7 (API rate limiting, authenticated endpoints)
-- `core/ai-guardrails.md` §5 (per-user rate limits and spending caps)
+- `core-ai/ai-guardrails.md` §5 (per-user rate limits and spending caps)
 
 ---
 
@@ -84,8 +84,8 @@ Attacker uses the public inference API as their probe surface: black-box extract
 AI agent executes code or shell commands produced by the model. Without sandbox isolation, prompt injection becomes RCE.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §6 (Do not execute AI-generated code without sandbox isolation)
-- `core/ai-guardrails.md` §5 (Least privilege for AI components)
+- `core-ai/ai-guardrails.md` §6 (Do not execute AI-generated code without sandbox isolation)
+- `core-ai/ai-guardrails.md` §5 (Least privilege for AI components)
 
 ---
 
@@ -94,7 +94,7 @@ AI agent executes code or shell commands produced by the model. Without sandbox 
 Direct or indirect injection of attacker-controlled instructions into the model's input. The single most exploitable AI-layer technique.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §1 (full section)
+- `core-ai/ai-guardrails.md` §1 (full section)
 - `web-app-ai/checklist.md` §4
 - `web-app-ai/attack-scenarios.md` Scenarios 1, 2, 3
 - `fintech-ai/checklist.md` Scenario 1
@@ -106,7 +106,7 @@ Direct or indirect injection of attacker-controlled instructions into the model'
 Compromise of a plugin or tool an LLM can invoke. The plugin runs with whatever permissions the agent holds.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (least privilege, URL allowlist, human review gate)
+- `core-ai/ai-guardrails.md` §5 (least privilege, URL allowlist, human review gate)
 
 ---
 
@@ -117,7 +117,7 @@ Compromise of a plugin or tool an LLM can invoke. The plugin runs with whatever 
 Persistent corruption of the model via training-data manipulation. Survives across deployments until retraining is performed cleanly.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §4 (Data Poisoning & Input Integrity)
+- `core-ai/ai-guardrails.md` §4 (Data Poisoning & Input Integrity)
 - `fintech-ai/checklist.md` §3 (Fraud model training data integrity)
 - `web-app-ai/attack-scenarios.md` Scenario 10 (RAG poisoning)
 
@@ -142,8 +142,8 @@ Crafted inputs that cause the model to produce attacker-desired output without t
 Attacker extracts training data, system prompts, or other users' data by repeatedly querying the inference API.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §2 (AI Context & Tenant Isolation)
-- `core/ai-guardrails.md` §3 (No secrets in prompts)
+- `core-ai/ai-guardrails.md` §2 (AI Context & Tenant Isolation)
+- `core-ai/ai-guardrails.md` §3 (No secrets in prompts)
 - `web-app-ai/attack-scenarios.md` Scenarios 3, 4, 13
 
 ---
@@ -153,7 +153,7 @@ Attacker extracts training data, system prompts, or other users' data by repeate
 Theft of model weights, configs, or fine-tuned variants.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (Log model provenance)
+- `core-ai/ai-guardrails.md` §3 (Log model provenance)
 - `web-app-ai/checklist.md` §2 (Authorisation on every API endpoint)
 
 ---
@@ -165,7 +165,7 @@ Theft of model weights, configs, or fine-tuned variants.
 Attacker drives up the target's AI inference costs financial DoS via expensive queries.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (Hard AI API spending caps, per-user rate limits)
+- `core-ai/ai-guardrails.md` §5 (Hard AI API spending caps, per-user rate limits)
 - `web-app-ai/attack-scenarios.md` Scenario 11
 
 ---
@@ -175,8 +175,8 @@ Attacker drives up the target's AI inference costs financial DoS via expensive q
 Downstream real-world harm caused by manipulated AI output financial loss, clinical harm, reputational damage.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §4 (Flag AI-generated content)
-- `core/ai-guardrails.md` §5 (Human review gate before irreversible actions)
+- `core-ai/ai-guardrails.md` §4 (Flag AI-generated content)
+- `core-ai/ai-guardrails.md` §5 (Human review gate before irreversible actions)
 - `fintech-ai/checklist.md` §1 (AI outputs never presented as final decisions)
 - `health-ai/checklist.md` §2 (Decision support only, never autonomous clinical decisions)
 

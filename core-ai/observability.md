@@ -35,10 +35,10 @@ The minimum event set every production system should emit.
   > Deny logs are where lateral movement and privilege escalation attempts show up. Drop them and you lose your strongest detection signal.
 
 - [ ] **Every AI prompt and the corresponding output** `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A09]` `[LLM06]`
-  > Cross-ref: `core/ai-guardrails.md` §7. The minimum viable AI audit trail. Needed for debugging, compliance, and repudiation defence.
+  > Cross-ref: `core-ai/ai-guardrails.md` §7. The minimum viable AI audit trail. Needed for debugging, compliance, and repudiation defence.
 
 - [ ] **Every access to sensitive data who, what, when, why** `[COMPLIANCE]` `[OWASP-A09]`
-  > Cross-ref: `core/ai-guardrails.md` §7. Required for data subject access requests in most data protection regimes. Also your first signal when something goes wrong.
+  > Cross-ref: `core-ai/ai-guardrails.md` §7. Required for data subject access requests in most data protection regimes. Also your first signal when something goes wrong.
 
 - [ ] **Every administrative action role changes, config changes, deletions** `[CRITICAL]` `[OWASP-A09]`
   > Admin actions are the highest-impact events in your system. Anything that changes access control, configuration, or persistent state must be logged.
@@ -61,7 +61,7 @@ Logs that lack these properties are not evidence. They are story-telling.
   > "Something went wrong" is not actionable. "User 12345 in session abc-def hit error X at 14:32:01 UTC" is.
 
 - [ ] **Append-only storage logs cannot be modified after write** `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A08]` `[OWASP-A09]`
-  > Cross-ref: `core/ai-guardrails.md` §7. A log that can be modified after the fact has no evidentiary value. Use append-only storage (CloudWatch, immutable object storage, ledger DB) or cryptographic chaining.
+  > Cross-ref: `core-ai/ai-guardrails.md` §7. A log that can be modified after the fact has no evidentiary value. Use append-only storage (CloudWatch, immutable object storage, ledger DB) or cryptographic chaining.
 
 - [ ] **Tamper-evident chain or signature** `[COMPLIANCE]` `[OWASP-A08]`
   > For high-value or regulated systems, append-only is not enough you need to detect tampering attempts. Hash-chained logs or signed log shipments.
@@ -81,7 +81,7 @@ Logs that lack these properties are not evidence. They are story-telling.
 Beyond standard application logging, AI systems have additional events worth capturing.
 
 - [ ] **Model name and version on every AI output** `[CRITICAL]` `[COMPLIANCE]` `[LLM05]` `[OWASP-A08]`
-  > Cross-ref: `core/ai-guardrails.md` §3, `fintech-ai/checklist.md` §1. If your AI model changes and outputs shift, you need to know which model produced which output. If an output is disputed months later, this is non-negotiable.
+  > Cross-ref: `core-ai/ai-guardrails.md` §3, `fintech-ai/checklist.md` §1. If your AI model changes and outputs shift, you need to know which model produced which output. If an output is disputed months later, this is non-negotiable.
 
 - [ ] **System prompt version (hash or identifier) on every AI output** `[COMPLIANCE]` `[LLM05]` `[OWASP-A08]`
   > System prompts evolve. The output a user saw on March 1 may not be reproducible on May 1 unless you logged the prompt version.
@@ -93,7 +93,7 @@ Beyond standard application logging, AI systems have additional events worth cap
   > Cross-ref: `fintech-ai/checklist.md` §5. "This figure came from Vendor X at timestamp T" is a materially different input than untagged data. Especially important when third-party data is later disputed or proven wrong.
 
 - [ ] **Immutable record of AI input and output, frozen at presentation time** `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A08]`
-  > Cross-ref: `core/ai-guardrails.md` §4, `fintech-ai/checklist.md` §1, `health-ai/checklist.md` §2. The exact output a decision-maker saw must be preserved as-is. Retroactive modification destroys the evidentiary chain.
+  > Cross-ref: `core-ai/ai-guardrails.md` §4, `fintech-ai/checklist.md` §1, `health-ai/checklist.md` §2. The exact output a decision-maker saw must be preserved as-is. Retroactive modification destroys the evidentiary chain.
 
 - [ ] **Tool/function call traces for agentic AI which tool, what arguments, what result** `[CRITICAL]` `[LLM07]` `[LLM08]` `[OWASP-A09]`
   > Agentic AI takes actions. Logging the chain of tool calls is the only way to reconstruct what an agent did and why.
@@ -128,7 +128,7 @@ CI-time CVE scanning catches what was known when you shipped. A CVE disclosed ag
   > Supply chain attacks usually start with a maintainer takeover or a quietly-published malicious version. Tools like Socket, Phylum, or Snyk flag these. For Python: monitor PyPI release activity for your direct dependencies.
 
 - [ ] **Model artifact integrity verified at load time** `[CRITICAL]` `[AI THREAT]` `[LLM05]` `[ATLAS-T0010]`
-  > Pre-trained models pulled from Hugging Face or similar are dependencies too. Verify a known-good hash at deploy time and log any mismatch as a P1 event. Cross-ref: `core/ai-guardrails.md` §3.
+  > Pre-trained models pulled from Hugging Face or similar are dependencies too. Verify a known-good hash at deploy time and log any mismatch as a P1 event. Cross-ref: `core-ai/ai-guardrails.md` §3.
 
 - [ ] **Time-to-patch tracked as a metric** `[NIST-MS]`
   > How long between a critical CVE being published and the patched version reaching production? If you don't measure it, it gets worse. Aim for under 7 days for critical, 30 for high.
@@ -197,7 +197,7 @@ A log that no one reads is not monitoring. Alerts are the contract between logs 
   > These are the classic account-compromise signals. Catching them early is the difference between a near-miss and a breach.
 
 - [ ] **Alert on anomalous AI usage volume, output length, suspected injection patterns** `[AI THREAT]` `[LLM01]` `[ATLAS-T0006]`
-  > Cross-ref: `core/ai-guardrails.md` §7. Unusual query volumes, unexpected output lengths, or repeated injection-pattern inputs are the AI-layer equivalents of brute-force or scan traffic.
+  > Cross-ref: `core-ai/ai-guardrails.md` §7. Unusual query volumes, unexpected output lengths, or repeated injection-pattern inputs are the AI-layer equivalents of brute-force or scan traffic.
 
 - [ ] **Alert on cost-harvesting signals high token consumption per user, unusual model selection** `[AI THREAT]` `[LLM04]` `[ATLAS-T0034]`
   > Financial DoS via AI is real and underestimated. Per-user cost monitoring is now an operational requirement, not a finance-team nicety.
@@ -209,7 +209,7 @@ A log that no one reads is not monitoring. Alerts are the contract between logs 
   > An alert channel everyone mutes is worse than no alerting at all. Tuning is ongoing work, not a one-time setup.
 
 - [ ] **Incident response runbook for each alert category** `[CRITICAL]` `[COMPLIANCE]` `[NIST-MG]`
-  > Cross-ref: `web-app-ai/checklist.md` §11, `core/ai-guardrails.md` §8. Who is paged? What do they check first? What is the escalation path? Document before the page fires.
+  > Cross-ref: `web-app-ai/checklist.md` §11, `core-ai/ai-guardrails.md` §8. Who is paged? What do they check first? What is the escalation path? Document before the page fires.
 
 ---
 
@@ -268,7 +268,7 @@ This file consolidates items from:
 
 | Source | Sections |
 |--------|----------|
-| `core/ai-guardrails.md` | §3 (model provenance, supply chain), §4 (immutable audit log), §7 (full logging section), §8 (incident runbook) |
+| `core-ai/ai-guardrails.md` | §3 (model provenance, supply chain), §4 (immutable audit log), §7 (full logging section), §8 (incident runbook) |
 | `web-app-ai/checklist.md` | §10 (dependency CVE scan, SBOM — extended here into continuous monitoring), §11 (logging, monitoring, IR) |
 | `fintech-ai/checklist.md` | §1 (audit trail for AI-assisted decisions, model version) |
 | `health-ai/checklist.md` | §2 (override logging, AI recommendations auditable), §3 (transcript retention), §5 (break-glass) |

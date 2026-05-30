@@ -54,7 +54,7 @@ SQL, NoSQL, OS command, LDAP injection and now prompt injection into LLMs as a f
 **Mapped checklist items:**
 - `web-app-ai/checklist.md` §3 (Input Validation & Injection)
 - `web-app-ai/checklist.md` §4 (Prompt Injection)
-- `core/ai-guardrails.md` §1 (Prompt Injection Defences)
+- `core-ai/ai-guardrails.md` §1 (Prompt Injection Defences)
 
 ---
 
@@ -63,8 +63,8 @@ SQL, NoSQL, OS command, LDAP injection and now prompt injection into LLMs as a f
 Architectural flaws: missing threat modelling, missing security controls at design time, business logic vulnerabilities that no code review can catch.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (Agentic AI permission design)
-- `core/ai-guardrails.md` §8 (Compliance & Governance Baseline incident response runbook before launch)
+- `core-ai/ai-guardrails.md` §5 (Agentic AI permission design)
+- `core-ai/ai-guardrails.md` §8 (Compliance & Governance Baseline incident response runbook before launch)
 - `fintech-ai/checklist.md` §1 (AI in Financial Decision Pipelines - design-level controls)
 
 ---
@@ -87,7 +87,7 @@ Unpatched dependencies, unpinned versions, abandoned libraries, AI models pulled
 
 **Mapped checklist items:**
 - `web-app-ai/checklist.md` §10 (Dependency & Supply Chain)
-- `core/ai-guardrails.md` §3 (Pin model versions, CVE scan)
+- `core-ai/ai-guardrails.md` §3 (Pin model versions, CVE scan)
 - `web-app-ai/attack-scenarios.md` Scenario 9
 
 ---
@@ -107,8 +107,8 @@ Weak password policy, missing MFA, session fixation, predictable session IDs, cr
 Unsigned updates, untrusted CI/CD pipelines, deserialisation of untrusted data, AI model integrity not verified.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (AI Supply Chain & Model Integrity)
-- `core/ai-guardrails.md` §4 (Immutable audit log of AI inputs and outputs)
+- `core-ai/ai-guardrails.md` §3 (AI Supply Chain & Model Integrity)
+- `core-ai/ai-guardrails.md` §4 (Immutable audit log of AI inputs and outputs)
 - `web-app-ai/checklist.md` §10 (SBOM, dependency pinning)
 - `fintech-ai/checklist.md` §1 (AI output immutability)
 
@@ -119,7 +119,7 @@ Unsigned updates, untrusted CI/CD pipelines, deserialisation of untrusted data, 
 Insufficient logging, no alerting, no log integrity, logs lost during incident response.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §7 (Logging, Audit Trails & Repudiation)
+- `core-ai/ai-guardrails.md` §7 (Logging, Audit Trails & Repudiation)
 - `web-app-ai/checklist.md` §11 (Logging, Monitoring & Incident Response)
 - `fintech-ai/checklist.md` §1 (Audit trail for every AI-assisted financial decision)
 - `health-ai/checklist.md` §2 (Override logging for clinician overrides)
@@ -132,7 +132,7 @@ The application fetches a URL supplied or influenced by an attacker. AI agents t
 
 **Mapped checklist items:**
 - `web-app-ai/checklist.md` §3 (Limit accepted URL schemes)
-- `core/ai-guardrails.md` §5 (Block AI from making outbound requests to user-supplied URLs)
+- `core-ai/ai-guardrails.md` §5 (Block AI from making outbound requests to user-supplied URLs)
 
 ---
 

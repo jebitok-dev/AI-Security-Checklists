@@ -22,7 +22,7 @@ Built from hands-on CTF work, OWASP LLM Top 10, MITRE ATLAS, STRIDE threat model
 ## Structure
 
 ```
-core/
+core-ai/
   ai-guardrails.md            # AI-specific checks shared across all domains
   observability.md            # Consolidated lens on logging, audit trails, monitoring
   prompt-injection-payloads.md # Categorised payload library for testing
@@ -44,7 +44,7 @@ frameworks/
 
 ## How to use this
 
-- Start with `core/ai-guardrails.md` these apply to any system with an AI layer
+- Start with `core-ai/ai-guardrails.md` these apply to any system with an AI layer
 - Then pick your domain checklist
 - Items tagged `[CRITICAL]` should be addressed before any users touch the system
 - Items tagged `[AI THREAT]` are specific to the AI layer standard security tools won't catch these

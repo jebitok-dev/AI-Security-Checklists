@@ -1,6 +1,6 @@
 # Health / Medical + AI Security Checklist
 
-Builds on `core/ai-guardrails.md` and `web-app-ai/checklist.md`. This checklist adds health-specific items covering patient data sensitivity, clinical AI oversight, and healthcare regulatory requirements.
+Builds on `core-ai/ai-guardrails.md` and `web-app-ai/checklist.md`. This checklist adds health-specific items covering patient data sensitivity, clinical AI oversight, and healthcare regulatory requirements.
 
 Read both the core guardrails and the web app checklist first. This file covers the delta.
 

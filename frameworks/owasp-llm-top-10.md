@@ -27,7 +27,7 @@ Source: [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10
 User-controlled input that alters the behaviour of the LLM. Direct (text fields) or indirect (uploaded files, fetched URLs, RAG corpora).
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §1 (all items)
+- `core-ai/ai-guardrails.md` §1 (all items)
 - `web-app-ai/checklist.md` §4 (web-app-specific prompt injection items)
 - `web-app-ai/attack-scenarios.md` Scenarios 1, 2, 3, 13
 - `fintech-ai/checklist.md` Scenario 1 (investor-readiness score manipulation)
@@ -41,7 +41,7 @@ User-controlled input that alters the behaviour of the LLM. Direct (text fields)
 LLM output rendered to a browser, executed as code, or passed to a downstream system without validation. The classic vector for XSS-via-AI.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §6 (Output Handling & Rendering)
+- `core-ai/ai-guardrails.md` §6 (Output Handling & Rendering)
 - `web-app-ai/checklist.md` §5 (Output Encoding & XSS Prevention)
 - `web-app-ai/attack-scenarios.md` Scenario 15 (stored XSS via AI output)
 
@@ -52,7 +52,7 @@ LLM output rendered to a browser, executed as code, or passed to a downstream sy
 Malicious or biased content injected into training data, fine-tuning data, or RAG retrieval stores. Affects every downstream output.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §4 (Data Poisoning & Input Integrity)
+- `core-ai/ai-guardrails.md` §4 (Data Poisoning & Input Integrity)
 - `fintech-ai/checklist.md` §3 (Fraud Detection Model Integrity)
 - `health-ai/checklist.md` §4 (AI Model Bias & Fairness)
 - `web-app-ai/attack-scenarios.md` Scenario 10 (RAG poisoning)
@@ -64,7 +64,7 @@ Malicious or biased content injected into training data, fine-tuning data, or RA
 Crafted inputs that exhaust the model's context window, token budget, or API quota. Financial DoS more often than service DoS.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (rate limits, spending caps)
+- `core-ai/ai-guardrails.md` §5 (rate limits, spending caps)
 - `web-app-ai/checklist.md` §7 (API rate limiting, request size limits)
 - `web-app-ai/attack-scenarios.md` Scenarios 11, 12
 
@@ -75,7 +75,7 @@ Crafted inputs that exhaust the model's context window, token budget, or API quo
 Compromised pre-trained models, vulnerable AI libraries, malicious model hubs. Invisible until triggered.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (AI Supply Chain & Model Integrity)
+- `core-ai/ai-guardrails.md` §3 (AI Supply Chain & Model Integrity)
 - `web-app-ai/checklist.md` §10 (Dependency & Supply Chain)
 - `web-app-ai/attack-scenarios.md` Scenario 9 (compromised dependency)
 
@@ -86,8 +86,8 @@ Compromised pre-trained models, vulnerable AI libraries, malicious model hubs. I
 LLM reveals system prompt content, other users' data, training data, or secrets embedded in the prompt.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §2 (AI Context & Tenant Isolation)
-- `core/ai-guardrails.md` §3 (no secrets in prompts)
+- `core-ai/ai-guardrails.md` §2 (AI Context & Tenant Isolation)
+- `core-ai/ai-guardrails.md` §3 (no secrets in prompts)
 - `web-app-ai/checklist.md` §8 (AI Context Isolation)
 - `web-app-ai/attack-scenarios.md` Scenarios 4, 13, 14
 - `health-ai/checklist.md` §3 (Sensitive Data Minimisation in AI Prompts)
@@ -99,7 +99,7 @@ LLM reveals system prompt content, other users' data, training data, or secrets 
 LLM plugins, tools, or function-calling integrations with insufficient input validation or excessive permissions. Plugins become a privilege-escalation pathway.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (Agentic AI & Permission Controls)
+- `core-ai/ai-guardrails.md` §5 (Agentic AI & Permission Controls)
 - `web-app-ai/checklist.md` §8 (AI cannot access data stores directly)
 
 ---
@@ -109,7 +109,7 @@ LLM plugins, tools, or function-calling integrations with insufficient input val
 Autonomous LLM agents granted more permissions, autonomy, or scope than the task requires. Force multiplier for any prompt injection.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §5 (least privilege, human review gate, URL allowlist)
+- `core-ai/ai-guardrails.md` §5 (least privilege, human review gate, URL allowlist)
 - `web-app-ai/checklist.md` §8 (RAG results filtered by user permissions)
 - `fintech-ai/checklist.md` §1 (human review gate before any financial action)
 - `health-ai/checklist.md` §2 (decision support only, never autonomous clinical decisions)
@@ -121,8 +121,8 @@ Autonomous LLM agents granted more permissions, autonomy, or scope than the task
 Users or downstream systems treat LLM outputs as factual without verification. Risk surface is human and organisational as much as technical.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §4 (flag AI-generated content as AI-generated)
-- `core/ai-guardrails.md` §8 (disclose AI use to end users)
+- `core-ai/ai-guardrails.md` §4 (flag AI-generated content as AI-generated)
+- `core-ai/ai-guardrails.md` §8 (disclose AI use to end users)
 - `fintech-ai/checklist.md` §1 (AI outputs never presented as final decisions)
 - `health-ai/checklist.md` §2 (AI confidence/uncertainty explicitly communicated)
 
@@ -133,8 +133,8 @@ Users or downstream systems treat LLM outputs as factual without verification. R
 Unauthorised extraction, copying, or exfiltration of proprietary models and weights. Includes black-box extraction via repeated querying.
 
 **Mapped checklist items:**
-- `core/ai-guardrails.md` §3 (model provenance logging)
-- `core/ai-guardrails.md` §7 (alert on anomalous query patterns)
+- `core-ai/ai-guardrails.md` §3 (model provenance logging)
+- `core-ai/ai-guardrails.md` §7 (alert on anomalous query patterns)
 - `web-app-ai/checklist.md` §7 (rate limit all API endpoints)
 
 ---

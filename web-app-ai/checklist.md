@@ -2,7 +2,7 @@
 
 For web applications with an integrated AI layer covering the full stack from authentication to AI-specific attack surfaces.
 
-Start with `core/ai-guardrails.md` then work through this checklist.
+Start with `core-ai/ai-guardrails.md` then work through this checklist.
 
 ---
 
@@ -106,7 +106,7 @@ Start with `core/ai-guardrails.md` then work through this checklist.
 ## 4. Prompt Injection (AI Layer)
 
 > Frameworks: `[LLM01]` `[OWASP-A03]` `[ATLAS-T0051]`
-> See `core/ai-guardrails.md`: Section 1 for the full prompt injection checklist.
+> See `core-ai/ai-guardrails.md`: Section 1 for the full prompt injection checklist.
 
 Additional web-app-specific items:
 
@@ -193,7 +193,7 @@ Additional web-app-specific items:
 ## 8. AI Context Isolation & Data Handling
 
 > Frameworks: `[LLM06]` `[LLM08]` `[OWASP-A01]` `[ATLAS-T0024]`
-> See `core/ai-guardrails.md`: Sections 2, 3, 4 for the full AI context checklist.
+> See `core-ai/ai-guardrails.md`: Sections 2, 3, 4 for the full AI context checklist.
 
 Additional web-app-specific items:
 

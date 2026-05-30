@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS / temp
+Thumbs.db
+desktop.ini
+
+# Output / build (in case the future tooling repo lands here by accident)
+node_modules/
+dist/
+build/
+*.log
+
+# Env / secrets
+.env
+.env.local
+.env.*.local

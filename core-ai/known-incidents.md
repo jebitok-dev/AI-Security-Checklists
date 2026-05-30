@@ -32,8 +32,8 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Data poisoning at inference / online learning, `[LLM03]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §4: Validate and whitelist accepted fields on every AI-facing endpoint.
-- `core/ai-guardrails.md` §4: Monitor for anomalous AI output patterns.
+- `core-ai/ai-guardrails.md` §4: Validate and whitelist accepted fields on every AI-facing endpoint.
+- `core-ai/ai-guardrails.md` §4: Monitor for anomalous AI output patterns.
 - Don't let user input become training input without an integrity layer.
 
 **Why it still matters in 2026:** Any system that fine-tunes on user feedback (thumbs up/down, edits, chat history) is one coordinated-input campaign away from this.
@@ -47,9 +47,9 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Sensitive information disclosure via model memorisation, `[LLM06]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §3: No secrets or credentials in AI prompts or model configs — extends to training data.
+- `core-ai/ai-guardrails.md` §3: No secrets or credentials in AI prompts or model configs — extends to training data.
 - Filter training data for secrets before pretraining.
-- `core/ai-guardrails.md` §1: Filter AI output before rendering to users — detect and block credential-shaped output.
+- `core-ai/ai-guardrails.md` §1: Filter AI output before rendering to users — detect and block credential-shaped output.
 
 **Why it still matters in 2026:** Teams fine-tuning on internal corpora replicate this exact failure mode at smaller scale. Any model that has seen secrets in training will, eventually, output them.
 
@@ -62,9 +62,9 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** System prompt extraction via prompt injection, `[LLM01]` `[LLM06]` `[ATLAS-T0051]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §1: Separate system prompt from user content (architecturally; a system prompt that can be read aloud is leakable).
-- `core/ai-guardrails.md` §1: Filter AI output before rendering — block outputs that contain system prompt fragments.
-- `core/ai-guardrails.md` §3: Don't put secrets, internal rules, or sensitive business logic in the system prompt at all.
+- `core-ai/ai-guardrails.md` §1: Separate system prompt from user content (architecturally; a system prompt that can be read aloud is leakable).
+- `core-ai/ai-guardrails.md` §1: Filter AI output before rendering — block outputs that contain system prompt fragments.
+- `core-ai/ai-guardrails.md` §3: Don't put secrets, internal rules, or sensitive business logic in the system prompt at all.
 
 **Why it still matters in 2026:** Every team building on top of an LLM puts *something* in the system prompt. If that "something" is secret, it leaks. Treat the system prompt as visible.
 
@@ -77,8 +77,8 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Cross-tenant data leakage via caching layer, `[LLM06]` `[OWASP-A01]` `[ATLAS-T0024]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §2: Isolate AI context per user session — no shared state across tenants.
-- `core/ai-guardrails.md` §2: Test cross-tenant data leakage as a dedicated QA test case.
+- `core-ai/ai-guardrails.md` §2: Isolate AI context per user session — no shared state across tenants.
+- `core-ai/ai-guardrails.md` §2: Test cross-tenant data leakage as a dedicated QA test case.
 - `web-app-ai/checklist.md` §8: AI session scoped to authenticated identity.
 
 **Why it still matters in 2026:** Any cache layer (Redis, in-memory, CDN) that touches user-specific AI state is a candidate for this exact bug. The library bug is the immediate cause; the missing isolation test is the deeper one.
@@ -92,8 +92,8 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Sensitive data in third-party AI prompts; vendor-risk failure, `[LLM06]` `[NIST-GV]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §3: No secrets or credentials in AI prompts or model configs.
-- `core/ai-guardrails.md` §8: Vendor risk assessment for all AI providers and data processors.
+- `core-ai/ai-guardrails.md` §3: No secrets or credentials in AI prompts or model configs.
+- `core-ai/ai-guardrails.md` §8: Vendor risk assessment for all AI providers and data processors.
 - DLP-style controls at the egress point catching pasted code going to consumer AI URLs.
 
 **Why it still matters in 2026:** Repeats whenever an organisation has employees who use AI tools faster than IT can sanction them. The shape is now AI coding assistants, not chat — same root cause, different surface.
@@ -107,9 +107,9 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Excessive agency, overreliance, no human gate, `[LLM08]` `[LLM09]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §5: Human review gate before AI output triggers irreversible actions.
-- `core/ai-guardrails.md` §4: Flag AI-generated content as AI-generated in the UI.
-- `core/ai-guardrails.md` §1: Sanitise user inputs; constrain the prompt format.
+- `core-ai/ai-guardrails.md` §5: Human review gate before AI output triggers irreversible actions.
+- `core-ai/ai-guardrails.md` §4: Flag AI-generated content as AI-generated in the UI.
+- `core-ai/ai-guardrails.md` §1: Sanitise user inputs; constrain the prompt format.
 
 **Why it still matters in 2026:** Replace "Chevy dealer" with "any business using an AI chatbot for customer-facing decisions." The legal question of whether the offer is binding remains unsettled in most jurisdictions.
 
@@ -122,9 +122,9 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Overreliance, legal accountability for AI outputs, `[LLM09]` `[OWASP-A04]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §4: Flag AI-generated content as AI-generated.
-- `core/ai-guardrails.md` §6: Make AI-generated content immutable after it has been acted on (so disputes can be resolved with the actual exchange, not paraphrase).
-- `core/observability.md` §3: Immutable record of AI input and output, frozen at presentation time.
+- `core-ai/ai-guardrails.md` §4: Flag AI-generated content as AI-generated.
+- `core-ai/ai-guardrails.md` §6: Make AI-generated content immutable after it has been acted on (so disputes can be resolved with the actual exchange, not paraphrase).
+- `core-ai/observability.md` §3: Immutable record of AI input and output, frozen at presentation time.
 - Train AI on authoritative policy data, or RAG-link to it. Verify high-confidence outputs against policy.
 
 **Why it still matters in 2026:** This is now a *cited precedent*. Any AI customer-facing system is potentially binding on the operator. The compliance/audit-trail items in the checklists are not abstract — they are evidence in a tribunal.
@@ -138,8 +138,8 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Insecure output handling, output filtering missing, `[LLM02]` `[LLM01]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §1: Filter AI output before rendering to users.
-- `core/ai-guardrails.md` §6: Sanitise AI output before rendering in the browser.
+- `core-ai/ai-guardrails.md` §1: Filter AI output before rendering to users.
+- `core-ai/ai-guardrails.md` §6: Sanitise AI output before rendering in the browser.
 - Output classifier (toxicity, brand-safety) before the response leaves the server.
 
 **Why it still matters in 2026:** Output filtering is the cheapest control to add and the most consistently omitted. Teams trust the model to behave; the model behaves how users push it.
@@ -153,7 +153,7 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Overreliance, lack of validated scope, no clinical-style governance for high-consequence advice, `[LLM09]` `[NIST-GV]` `[NIST-MP]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §8: Disclose AI use to end users (it did, but the disclosure was not strong enough to override the implied authority of a government chatbot).
+- `core-ai/ai-guardrails.md` §8: Disclose AI use to end users (it did, but the disclosure was not strong enough to override the implied authority of a government chatbot).
 - `health-ai/checklist.md` §2 (analogous): Scope of AI clearly defined — what is it validated for?
 - `health-ai/checklist.md` §2 (analogous): AI not used for decisions in domains where it was not validated.
 - RAG-link to authoritative regulation; refuse to answer outside that scope.
@@ -169,9 +169,9 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Indirect prompt injection + agentic excess + insecure output rendering, `[LLM01]` `[LLM02]` `[LLM08]` `[ATLAS-T0051]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §1: Block indirect prompt injection via external content.
-- `core/ai-guardrails.md` §5: Block AI from making outbound requests to user-supplied URLs.
-- `core/ai-guardrails.md` §6: Sanitise AI output before rendering in the browser (the rendered link is the exfiltration vector).
+- `core-ai/ai-guardrails.md` §1: Block indirect prompt injection via external content.
+- `core-ai/ai-guardrails.md` §5: Block AI from making outbound requests to user-supplied URLs.
+- `core-ai/ai-guardrails.md` §6: Sanitise AI output before rendering in the browser (the rendered link is the exfiltration vector).
 - `web-app-ai/checklist.md` §5: AI-generated content treated as untrusted and encoded before rendering.
 
 **Why it still matters in 2026:** This is the template for AI assistants integrated into multi-user content platforms (Slack, Teams, Notion, GitHub). Any AI that reads content one user can write and another user can summarise is in scope.
@@ -185,10 +185,10 @@ The point of this file is not to be exhaustive. It is to give every abstract che
 **Root cause class:** Indirect prompt injection + plugin/tool excess + missing egress controls, `[LLM01]` `[LLM07]` `[LLM08]` `[ATLAS-T0051]` `[ATLAS-T0024]`.
 
 **What would have prevented it:**
-- `core/ai-guardrails.md` §1: Block indirect prompt injection via uploaded files and external content.
-- `core/ai-guardrails.md` §5: Principle of least privilege for all AI components.
-- `core/ai-guardrails.md` §5: Block AI from making outbound requests to user-supplied URLs.
-- `core/ai-guardrails.md` §5: Human review gate before AI output triggers irreversible actions.
+- `core-ai/ai-guardrails.md` §1: Block indirect prompt injection via uploaded files and external content.
+- `core-ai/ai-guardrails.md` §5: Principle of least privilege for all AI components.
+- `core-ai/ai-guardrails.md` §5: Block AI from making outbound requests to user-supplied URLs.
+- `core-ai/ai-guardrails.md` §5: Human review gate before AI output triggers irreversible actions.
 
 **Why it still matters in 2026:** This is the central concern for any team shipping an AI agent with tool access. Every new agentic product is a candidate for this class until proven otherwise. The pattern: agent reads attacker content → agent acts on attacker instructions → agent has tool access to do something harmful.
 

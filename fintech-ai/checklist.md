@@ -1,6 +1,6 @@
 # Fintech + AI Security Checklist
 
-Builds on `core/ai-guardrails.md` and `web-app-ai/checklist.md`. This checklist adds fintech-specific items covering AI in financial decision pipelines, payment flows, fraud model integrity, and regulatory mandates.
+Builds on `core-ai/ai-guardrails.md` and `web-app-ai/checklist.md`. This checklist adds fintech-specific items covering AI in financial decision pipelines, payment flows, fraud model integrity, and regulatory mandates.
 
 Read both the core guardrails and the web app checklist first. This file covers the delta.
 
@@ -147,7 +147,7 @@ Applicable regulations vary by jurisdiction. Identify which apply to your platfo
   > CBK has issued guidance on digital credit, mobile money, and data governance. Confirm which category your product falls under.
 
 - [ ] **Kenya: DPA 2019 - ODPC registration and compliance baseline** `[COMPLIANCE]` `[NIST-GV]`
-  > See `core/ai-guardrails.md` compliance section. For fintech specifically: financial data is sensitive personal data under the DPA. Higher bar for processing, security, and consent.
+  > See `core-ai/ai-guardrails.md` compliance section. For fintech specifically: financial data is sensitive personal data under the DPA. Higher bar for processing, security, and consent.
 
 - [ ] **UK: FCA AI guidelines - AI outputs in financial contexts must be disclosed and explainable** `[COMPLIANCE]` `[LLM09]` `[NIST-GV]`
   > FCA has published guidance on AI in financial services. If you have UK users or investors, review and apply.
