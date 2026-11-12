@@ -51,7 +51,7 @@ Health data is among the most sensitive personal data categories in every major 
 
 ## 2. AI in Clinical Decision Support
 
-> Frameworks: `[LLM08]` `[LLM09]` `[OWASP-A04]` `[OWASP-A08]` `[NIST-GV]` `[NIST-MG]`
+> Frameworks: `[LLM08]` `[LLM09]` `[OWASP-A04]` `[OWASP-A08]` `[ASI09]` `[NIST-GV]` `[NIST-MG]`
 
 AI in a clinical context has unique risk characteristics an incorrect AI output can directly harm a patient.
 
@@ -61,10 +61,10 @@ AI in a clinical context has unique risk characteristics an incorrect AI output 
 - [ ] **Every AI output in a clinical context is clearly labeled as AI-generated** `[CRITICAL]` `[COMPLIANCE]` `[LLM09]` `[NIST-GV]`
   > Clinicians must know they are reviewing an AI-generated suggestion, not a verified clinical finding. Ambiguity here is a patient safety risk.
 
-- [ ] **AI confidence or uncertainty explicitly communicated** `[AI THREAT]` `[COMPLIANCE]` `[LLM09]` `[NIST-MS]`
-  > An AI that produces confident-sounding output on thin or incomplete data is more dangerous than one that says "insufficient data to assess." Express uncertainty explicitly in the UI, not just in the logs.
+- [ ] **AI confidence or uncertainty explicitly communicated** `[AI THREAT]` `[COMPLIANCE]` `[LLM09]` `[ASI09]` `[NIST-MS]`
+  > An AI that produces confident-sounding output on thin or incomplete data is more dangerous than one that says "insufficient data to assess." Express uncertainty explicitly in the UI, not just in the logs. Fluent, confident text is exactly what makes a busy clinician approve without checking.
 
-- [ ] **Override logging for every clinician override of an AI recommendation** `[COMPLIANCE]` `[AI THREAT]` `[OWASP-A09]` `[NIST-MS]`
+- [ ] **Override logging for every clinician override of an AI recommendation** `[COMPLIANCE]` `[AI THREAT]` `[OWASP-A09]` `[ASI09]` `[NIST-MS]`
   > When a clinician overrides the AI, log: what the AI recommended, what the clinician decided, and optionally why. This is both a quality improvement dataset and an audit trail.
 
 - [ ] **AI recommendations auditable the exact output shown at time of decision is preserved** `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A08]` `[OWASP-A09]`
@@ -75,6 +75,9 @@ AI in a clinical context has unique risk characteristics an incorrect AI output 
 
 - [ ] **AI not used for clinical decisions in populations where it was not validated** `[CRITICAL]` `[COMPLIANCE]` `[NIST-MP]`
   > Pediatric, geriatric, pregnant, or rare-disease populations may be underrepresented in training data. Validate explicitly or exclude from AI-assisted decision-making.
+
+- [ ] **AI that writes to the record or places orders is treated as agentic** `[CRITICAL]` `[AI THREAT]` `[ASI02]` `[ASI09]` `[LLM08]`
+  > Once the AI can update the chart, draft prescriptions, send referrals, or book appointments, it is no longer only decision support. Every write is a draft until a clinician signs the specific change, the sign-off screen shows the exact values (drug, dose, route, patient), and the write is logged with the clinician, the AI, and what triggered it. Work through `frameworks/owasp-agentic-top-10.md` for these features.
 
 ---
 
@@ -207,6 +210,8 @@ Before any patient or clinical users touch the system:
 - [ ] AI outputs labeled as AI-generated and advisory in all clinical-facing UI `[CRITICAL]` `[COMPLIANCE]` `[LLM09]`
 - [ ] Cross-patient AI context leakage tested and confirmed clean `[CRITICAL]` `[LLM06]` `[ATLAS-T0024]`
 - [ ] Override logging operational for all clinician overrides of AI recommendations `[COMPLIANCE]` `[OWASP-A09]`
+- [ ] AI interaction logging verified: a test AI output can be traced to its patient, clinician, model version, and input, without logging more patient data than needed `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A09]`
+- [ ] If the AI writes to records or places orders: clinician sign-off on exact values and write logging confirmed `[CRITICAL]` `[ASI09]` `[ASI10]`
 - [ ] BAA in place with AI model providers if PHI is processed `[CRITICAL]` `[COMPLIANCE]` `[LLM05]`
 - [ ] Medical device classification reviewed for your jurisdiction `[COMPLIANCE]` `[NIST-GV]`
 - [ ] Bias evaluation completed across relevant demographic subgroups `[COMPLIANCE]` `[LLM03]` `[NIST-MS]`

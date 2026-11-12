@@ -38,6 +38,7 @@ frameworks/
   owasp-llm-top-10.md     # LLM01-LLM10 reference, mapped to checklist items
   owasp-top-10-2025.md    # OWASP Top 10 (web) 2025 reference
   mitre-atlas-top.md      # Most relevant MITRE ATLAS techniques for web+AI
+  owasp-agentic-top-10.md # ASI01-ASI10 reference for agentic systems (tools, memory, delegation)
 ```
 
 ---
@@ -46,6 +47,7 @@ frameworks/
 
 - Start with `core-ai/ai-guardrails.md` these apply to any system with an AI layer
 - Then pick your domain checklist
+- If your AI can call tools, persist memory, or delegate to other agents, also work through `frameworks/owasp-agentic-top-10.md`
 - Items tagged `[CRITICAL]` should be addressed before any users touch the system
 - Items tagged `[AI THREAT]` are specific to the AI layer standard security tools won't catch these
 - Items tagged `[COMPLIANCE]` have regulatory implications depending on your jurisdiction
@@ -62,6 +64,7 @@ frameworks/
 | `[COMPLIANCE]` | Has regulatory / legal implications |
 | `[LLM0X]` | Maps to an OWASP LLM Top 10 category (LLM01–LLM10) |
 | `[OWASP-A0X]` | Maps to an OWASP Top 10 (web) 2025 category (A01–A10) |
+| `[ASI0X]` | Maps to an OWASP Top 10 for Agentic Applications category (ASI01–ASI10) |
 | `[ATLAS-Txxxx]` | Maps to a MITRE ATLAS technique ID |
 | `[NIST-XX]` | Maps to a NIST AI RMF function (GV / MP / MS / MG) |
 
@@ -73,6 +76,7 @@ See `frameworks/` for the full reference of each tagged framework.
 
 - OWASP LLM Top 10 (see `frameworks/owasp-llm-top-10.md`)
 - OWASP Top 10 for Web Applications 2025 (see `frameworks/owasp-top-10-2025.md`)
+- OWASP Top 10 for Agentic Applications 2026 (see `frameworks/owasp-agentic-top-10.md`)
 - MITRE ATLAS (see `frameworks/mitre-atlas-top.md`)
 - OWASP Web Security Testing Guide (WSTG)
 - MITRE ATT&CK

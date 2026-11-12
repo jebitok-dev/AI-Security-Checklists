@@ -13,12 +13,13 @@ Logging is the most commonly skipped control. Teams ship features and add loggin
 1. [What to log](#1-what-to-log)
 2. [Properties every log must have](#2-properties-every-log-must-have)
 3. [AI-specific logging](#3-ai-specific-logging)
-4. [Dependency & supply chain observability](#4-dependency--supply-chain-observability)
-5. [Access, override & audit logging](#5-access-override--audit-logging)
-6. [Retention, access & destruction](#6-retention-access--destruction)
-7. [Alerting & monitoring](#7-alerting--monitoring)
-8. [What NOT to log](#8-what-not-to-log)
-9. [Verifying your logging works](#9-verifying-your-logging-works)
+4. [Agent action logging](#4-agent-action-logging)
+5. [Dependency & supply chain observability](#5-dependency--supply-chain-observability)
+6. [Access, override & audit logging](#6-access-override--audit-logging)
+7. [Retention, access & destruction](#7-retention-access--destruction)
+8. [Alerting & monitoring](#8-alerting--monitoring)
+9. [What NOT to log](#9-what-not-to-log)
+10. [Verifying your logging works](#10-verifying-your-logging-works)
 
 ---
 
@@ -95,15 +96,57 @@ Beyond standard application logging, AI systems have additional events worth cap
 - [ ] **Immutable record of AI input and output, frozen at presentation time** `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A08]`
   > Cross-ref: `core-ai/ai-guardrails.md` §4, `fintech-ai/checklist.md` §1, `health-ai/checklist.md` §2. The exact output a decision-maker saw must be preserved as-is. Retroactive modification destroys the evidentiary chain.
 
-- [ ] **Tool/function call traces for agentic AI which tool, what arguments, what result** `[CRITICAL]` `[LLM07]` `[LLM08]` `[OWASP-A09]`
-  > Agentic AI takes actions. Logging the chain of tool calls is the only way to reconstruct what an agent did and why.
+- [ ] **Tool/function call traces for agentic AI which tool, what arguments, what result** `[CRITICAL]` `[LLM07]` `[LLM08]` `[ASI02]` `[OWASP-A09]`
+  > Agentic AI takes actions. Logging the chain of tool calls is the only way to reconstruct what an agent did and why. See §4 for the full set of agent logging requirements.
 
 - [ ] **AI confidence/uncertainty score on every output** `[COMPLIANCE]` `[LLM09]`
   > Cross-ref: `health-ai/checklist.md` §2. If the AI expressed low confidence and a decision-maker proceeded anyway, that is itself evidence both for them and against them.
 
 ---
 
-## 4. Dependency & supply chain observability
+## 4. Agent action logging
+
+> Frameworks: `[ASI02]` `[ASI03]` `[ASI06]` `[ASI07]` `[ASI08]` `[ASI09]` `[ASI10]` `[OWASP-A09]` `[LLM08]`
+> Applies when the AI can call tools, keep memory, run code, or delegate to other agents. See `frameworks/owasp-agentic-top-10.md`.
+
+Prompt-and-output logging (§3) tells you what the AI *said*. Once it can act, you also need to know what it *did*, under whose authority, and what made it do it. The OWASP agentic guidance is explicit that this logging is the deployer's job: the model provider does not do it for you.
+
+- [ ] **Every agent action records the five facts** `[CRITICAL]` `[ASI10]` `[OWASP-A09]`
+  > 1. **Who acted:** agent ID, and the user it acted for.
+  > 2. **Which tool:** tool name and version.
+  > 3. **With what details:** the arguments, or a hash of them where they contain sensitive data.
+  > 4. **Which credential:** the identity the call ran under (`identity=`).
+  > 5. **What started it:** user message ID, scheduled job, upstream agent, or the document/tool result that led to it.
+  >
+  > Plus timestamp, session ID, and a payload hash so the record can be checked against what actually ran. Cross-ref: `web-app-ai/checklist.md` §12, `fintech-ai/checklist.md` §2.
+
+- [ ] **The credential used is logged separately from the agent and the user** `[CRITICAL]` `[ASI03]` `[OWASP-A09]`
+  > "Agent X, acting for user Y, using service account Z." If those three collapse into one field, you cannot spot an agent using broader rights than the user who asked.
+
+- [ ] **Trace IDs carried across agent handovers and inter-agent messages** `[CRITICAL]` `[ASI07]` `[ASI08]` `[OWASP-A09]`
+  > Extends the correlation ID in §2 to agents. Log sender, receiver, and whether authentication or signature checks passed. A rejected message is a security event, not noise.
+
+- [ ] **Approvals logged with who approved, when, what they were shown, and the exact arguments approved** `[CRITICAL]` `[COMPLIANCE]` `[ASI09]` `[OWASP-A09]`
+  > Alert if the arguments executed differ from the arguments approved. Cross-ref: `fintech-ai/checklist.md` §2, `health-ai/checklist.md` §2.
+
+- [ ] **Memory writes and deletes logged with source and trust level** `[AI THREAT]` `[ASI06]` `[OWASP-A09]`
+  > Record whether the memory came from the user directly or from content the agent read, which session wrote it, and when it expires. Without this, a poisoned memory cannot be traced back to where it came from.
+
+- [ ] **Tool and MCP server version (or content hash) logged on each call** `[ASI04]` `[LLM05]` `[OWASP-A09]`
+  > Alert when a tool's version, hash, or description changes. A tool description is prompt input, so a silent change to it is a behaviour change.
+
+- [ ] **Code executions logged with code hash, sandbox ID, and blocked actions** `[ASI05]` `[OWASP-A09]`
+  > Blocked network or filesystem attempts from the sandbox are a strong signal of injection. Log them and alert.
+
+- [ ] **Kill-switch use and credential revocations logged** `[ASI10]` `[OWASP-A09]` `[NIST-MG]`
+  > Who stopped which agent, when, why, and which credentials were revoked. This is the start of every incident timeline.
+
+- [ ] **Agent logs are stored in your own log pipeline, not only in the model or agent platform's console** `[CRITICAL]` `[OWASP-A09]` `[COMPLIANCE]`
+  > Vendor dashboards have their own retention, access, and export limits, and may not record your tool arguments or credentials at all. Ship agent events to the same append-only, access-controlled store as the rest of your audit logs (§2).
+
+---
+
+## 5. Dependency & supply chain observability
 
 > Frameworks: `[OWASP-A06]` `[OWASP-A09]` `[LLM05]` `[ATLAS-T0010]`
 
@@ -135,7 +178,7 @@ CI-time CVE scanning catches what was known when you shipped. A CVE disclosed ag
 
 ---
 
-## 5. Access, override & audit logging
+## 6. Access, override & audit logging
 
 > Frameworks: `[OWASP-A09]` `[OWASP-A01]` `[NIST-MG]`
 
@@ -158,7 +201,7 @@ Not just *what* happened, but *who* did it and *who saw it*.
 
 ---
 
-## 6. Retention, access & destruction
+## 7. Retention, access & destruction
 
 > Frameworks: `[COMPLIANCE]` `[NIST-GV]`
 
@@ -184,7 +227,7 @@ Logs are personal data. They have a lifecycle.
 
 ---
 
-## 7. Alerting & monitoring
+## 8. Alerting & monitoring
 
 > Frameworks: `[OWASP-A09]` `[NIST-MS]` `[NIST-MG]` `[ATLAS-T0006]`
 
@@ -205,6 +248,15 @@ A log that no one reads is not monitoring. Alerts are the contract between logs 
 - [ ] **Alert on model drift fraud detection rates shifting, quality scores changing** `[AI THREAT]` `[LLM03]`
   > Cross-ref: `fintech-ai/checklist.md` §3, `health-ai/checklist.md` §4. Sudden shifts indicate drift, poisoning, or a discovered evasion technique.
 
+- [ ] **Alert when an agent leaves its behavioural baseline new tools, new credentials, new recipients, unusual volume** `[CRITICAL]` `[AI THREAT]` `[ASI10]`
+  > Declare each agent's expected tools and goals, record what normal looks like, and alert on deviation. This is how a hijacked or drifting agent gets caught while it is still acting.
+
+- [ ] **Alert on agent actions with no resolvable trigger ("origin unknown")** `[AI THREAT]` `[ASI10]` `[STRIDE]`
+  > Every action should trace to a user, a schedule, or another agent. One that traces to nothing is either a logging gap or an intrusion; both need a human.
+
+- [ ] **Alert when an agent hits a tool-call, loop, or spend cap** `[ASI08]` `[LLM04]`
+  > Cross-ref: `web-app-ai/checklist.md` §12. Hitting a cap means the cap worked, but something upstream is wrong.
+
 - [ ] **Suppress alert fatigue tune thresholds, deduplicate, escalate properly** `[OWASP-A09]`
   > An alert channel everyone mutes is worse than no alerting at all. Tuning is ongoing work, not a one-time setup.
 
@@ -213,7 +265,7 @@ A log that no one reads is not monitoring. Alerts are the contract between logs 
 
 ---
 
-## 8. What NOT to log
+## 9. What NOT to log
 
 > Frameworks: `[OWASP-A02]` `[LLM06]` `[COMPLIANCE]`
 
@@ -228,6 +280,9 @@ Logging the wrong thing turns your audit trail into a breach.
 - [ ] **No raw API keys or secrets in error messages** `[CRITICAL]` `[OWASP-A02]`
   > Stack traces that include the secret being used are a common leak vector. Scrub at the logger layer, not at the call site.
 
+- [ ] **No agent credentials, tool tokens, or connection strings in agent logs mask or hash them** `[CRITICAL]` `[OWASP-A02]` `[ASI03]`
+  > Tool arguments and tool results often carry tokens and connection strings. Log a hash or a masked reference (`identity=svc-payments-agent`), never the secret itself. Hashing still lets you match a record to what ran.
+
 - [ ] **No full prompts or outputs containing sensitive data unless required and protected** `[LLM06]` `[COMPLIANCE]`
   > AI prompts often contain user-provided sensitive data. If you log them, they become an additional data store with the same protection requirements as the original.
 
@@ -239,7 +294,7 @@ Logging the wrong thing turns your audit trail into a breach.
 
 ---
 
-## 9. Verifying your logging works
+## 10. Verifying your logging works
 
 > Frameworks: `[NIST-MS]`
 
@@ -247,6 +302,9 @@ Logging that has never been tested often turns out to be broken.
 
 - [ ] **Run a synthetic incident does your logging answer who-what-when?** `[CRITICAL]` `[OWASP-A09]`
   > Pick a recent real incident shape auth compromise, prompt injection, data leak. Walk through the logs as if responding. Note where you go blind.
+
+- [ ] **Run a synthetic agent incident can you trace an action back to what triggered it?** `[CRITICAL]` `[ASI01]` `[ASI10]` `[OWASP-A09]`
+  > Plant an instruction in a document, let the agent read it and take a (harmless) action, then work backwards from the action using only the logs. You should reach the document, the user, the agent, and the credential. Where you can't, that's the gap.
 
 - [ ] **Verify log volume against expected** `[OWASP-A09]`
   > Logging silently dropping events is a common failure mode. If you expect 10k auth events/day and see 100, something is broken.
@@ -269,9 +327,10 @@ This file consolidates items from:
 | Source | Sections |
 |--------|----------|
 | `core-ai/ai-guardrails.md` | §3 (model provenance, supply chain), §4 (immutable audit log), §7 (full logging section), §8 (incident runbook) |
-| `web-app-ai/checklist.md` | §10 (dependency CVE scan, SBOM — extended here into continuous monitoring), §11 (logging, monitoring, IR) |
-| `fintech-ai/checklist.md` | §1 (audit trail for AI-assisted decisions, model version) |
-| `health-ai/checklist.md` | §2 (override logging, AI recommendations auditable), §3 (transcript retention), §5 (break-glass) |
+| `web-app-ai/checklist.md` | §10 (dependency CVE scan, SBOM — extended here into continuous monitoring), §11 (logging, monitoring, IR), §12 (agent action logging, approvals, caps) |
+| `fintech-ai/checklist.md` | §1 (audit trail for AI-assisted decisions, model version), §2 (agent-initiated payment logging) |
+| `health-ai/checklist.md` | §2 (override logging, AI recommendations auditable, AI write logging), §3 (transcript retention), §5 (break-glass) |
+| `frameworks/owasp-agentic-top-10.md` | Logging note (five facts per action), ASI03, ASI07–ASI10 |
 
 If you change an item here, change it in the source file too or restructure so this file becomes the source of truth and the others reference back.
 
@@ -280,6 +339,7 @@ If you change an item here, change it in the source file too or restructure so t
 ## References
 
 - [OWASP A09: Security Logging and Monitoring Failures](https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/)
+- [OWASP Top 10 for Agentic Applications](https://genai.owasp.org/)
 - [NIST AI RMF: Measure function](https://www.nist.gov/itl/ai-risk-management-framework)
 - [MITRE ATLAS: Active Scanning (AML.T0006)](https://atlas.mitre.org/techniques/AML.T0006)
 - [PortSwigger: Logging vulnerabilities](https://portswigger.net/web-security/logging)
