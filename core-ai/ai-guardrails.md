@@ -111,6 +111,8 @@ Attackers can craft inputs designed to skew AI behaviour or corrupt training/ret
 
 AI agents that take actions (tool calls, API requests, file writes) need the same access controls as human users.
 
+> If the AI can call tools, keep memory, run code, or delegate to other agents, also work through `frameworks/owasp-agentic-top-10.md` and `web-app-ai/checklist.md` §12.
+
 - [ ] **Principle of least privilege for all AI components** `[CRITICAL]` `[AI THREAT]` `[LLM08]` `[OWASP-A01]`
   > An AI agent should only have access to what it needs to complete its task. Broad permissions are a force multiplier for prompt injection attacks.
 
@@ -159,6 +161,9 @@ Without logs, you cannot prove what happened or defend against false claims.
 
 - [ ] **Alert on anomalous AI usage patterns** `[AI THREAT]` `[OWASP-A09]` `[ATLAS-T0006]` `[NIST-MS]`
   > Unusual query volumes, unexpected output lengths, or repeated injection-pattern inputs should trigger alerts, not just log entries.
+
+- [ ] **If the AI takes actions, log every action with the five facts** `[CRITICAL]` `[ASI10]` `[OWASP-A09]`
+  > Who acted, which tool, with what arguments, under which credential, and what triggered it. Prompt logs alone can't tell you what an agent did. See `core-ai/observability.md` §4.
 
 ---
 

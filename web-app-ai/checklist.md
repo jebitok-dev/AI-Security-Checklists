@@ -19,9 +19,10 @@ Start with `core-ai/ai-guardrails.md` then work through this checklist.
 9. [Error Handling & Information Disclosure](#9-error-handling--information-disclosure)
 10. [Dependency & Supply Chain](#10-dependency--supply-chain)
 11. [Logging, Monitoring & Incident Response](#11-logging-monitoring--incident-response)
-12. [Pre-launch Checklist (Minimum Viable Security)](#pre-launch-checklist-minimum-viable-security)
-13. [Attack Scenarios](#attack-scenarios)
-14. [References](#references)
+12. [Agentic Features (Tools, Memory, Delegation)](#12-agentic-features-tools-memory-delegation)
+13. [Pre-launch Checklist (Minimum Viable Security)](#pre-launch-checklist-minimum-viable-security)
+14. [Attack Scenarios](#attack-scenarios)
+15. [References](#references)
 
 ---
 
@@ -265,6 +266,52 @@ Additional web-app-specific items:
 
 ---
 
+## 12. Agentic Features (Tools, Memory, Delegation)
+
+> Frameworks: `[ASI01]`–`[ASI10]` `[LLM08]` `[LLM07]` `[OWASP-A01]` `[OWASP-A03]` `[ATLAS-T0051]`
+> Applies only if the AI can call tools or APIs, store memory across sessions, run code, or hand work to other agents. A chat or RAG feature that only answers is covered by sections 1–11.
+> See `frameworks/owasp-agentic-top-10.md` for the full ASI01–ASI10 checklist. This section covers what changes in a web app.
+
+Once the AI can act, every tool becomes an API endpoint that the model calls on the user's behalf. A prompt injection is then no longer just wrong text on the screen; it can turn into a real action against a real account.
+
+- [ ] **Every tool call is authorised as the requesting user, server-side, at the tool layer** `[CRITICAL]` `[AI THREAT]` `[ASI03]` `[LLM08]` `[OWASP-A01]`
+  > The agent usually runs under a service account that can reach far more than any one user. If the tool trusts the agent instead of re-checking the user's permissions, any user can reach any data by asking the agent (the "confused deputy" problem).
+
+- [ ] **Tool arguments are validated like any request body** `[CRITICAL]` `[ASI02]` `[LLM07]` `[OWASP-A03]`
+  > The model fills in tool arguments from text an attacker can influence. Parameterise SQL, never build shell commands from arguments, restrict file paths to an allowed directory, and allowlist URL targets.
+
+- [ ] **Content the agent reads cannot trigger state-changing tools without user confirmation** `[CRITICAL]` `[AI THREAT]` `[ASI01]` `[LLM01]` `[ATLAS-T0051]`
+  > Web pages, emails, support tickets, uploaded files and RAG chunks can all carry instructions. Reading is allowed; sending, deleting, paying, sharing or changing permissions after reading needs explicit user approval.
+
+- [ ] **Each tool has a defined scope: allowed actions, targets, and maximum impact** `[CRITICAL]` `[ASI02]` `[LLM08]`
+  > "Can send email" is not a scope. "Can send email to the requesting user's own address, max 5 per session" is. Prefer read-only tools; split read and write into separate tools so write can be gated.
+
+- [ ] **Confirmation screens show the real action, built from the tool-call arguments** `[CRITICAL]` `[ASI09]`
+  > Show recipient, amount, file, record and permission exactly as the tool will receive them. Do not show the model's own explanation of why the action is fine; that text is what an attacker controls.
+
+- [ ] **Approvals are logged with who approved, when, and the exact arguments approved** `[COMPLIANCE]` `[ASI09]` `[OWASP-A09]`
+  > If the arguments executed differ from the arguments approved, that should be impossible, or at minimum alert.
+
+- [ ] **Agent memory is scoped per user and tenant, with provenance on every write** `[CRITICAL]` `[AI THREAT]` `[ASI06]` `[LLM06]` `[OWASP-A01]`
+  > Persistent memory turns a one-off injection into a permanent one. Record where each memory came from (user typed it vs. agent read it in a document), let users view and delete their memories, and expire low-trust entries.
+
+- [ ] **Tool servers and plugins (including MCP servers) are allowlisted and version-pinned** `[CRITICAL]` `[ASI04]` `[LLM05]` `[OWASP-A06]`
+  > No user-supplied tool endpoints. A tool's description is also prompt input, so a changed tool description can change agent behaviour without any code change. Review tool updates like dependency updates.
+
+- [ ] **Code execution features run in a sandbox with no credentials and no internal network access** `[CRITICAL]` `[AI THREAT]` `[ASI05]` `[LLM02]` `[ATLAS-T0050]`
+  > No root, no cloud metadata endpoint (`169.254.169.254`), no access to internal services, short time and memory limits, and a fresh environment per session.
+
+- [ ] **Per-session caps on tool calls, loop iterations, and spend** `[CRITICAL]` `[ASI08]` `[LLM04]` `[ATLAS-T0034]`
+  > Agents retry and loop. Without a hard ceiling, one bad tool result or one injected instruction can make thousands of calls, at the user's or your expense.
+
+- [ ] **Output from other agents and tools is treated as untrusted input** `[AI THREAT]` `[ASI07]` `[LLM01]`
+  > In multi-agent setups, a sub-agent's reply is content, not instructions. Authenticate agent-to-agent calls and do not let an upstream agent's text widen a downstream agent's permissions.
+
+- [ ] **Every agent action is logged with the five facts and can be stopped** `[CRITICAL]` `[ASI10]` `[OWASP-A09]`
+  > Who asked, which tool, which arguments, which credential, and what triggered it (user message, scheduled job, another agent). Have a per-agent kill switch that also revokes the agent's credentials. See `core-ai/observability.md`.
+
+---
+
 ## Pre-launch Checklist (Minimum Viable Security)
 
 Before any real users touch the system:
@@ -277,8 +324,10 @@ Before any real users touch the system:
 - [ ] Security headers configured and verified `[CRITICAL]` `[OWASP-A05]`
 - [ ] Privacy notice and consent mechanism live `[CRITICAL]` `[COMPLIANCE]` `[NIST-GV]`
 - [ ] AI use disclosed to users `[CRITICAL]` `[COMPLIANCE]` `[LLM09]` `[NIST-GV]`
+- [ ] Logging verified, not just configured: a test login, a test AI prompt, and a test sensitive-data access each appear in central logs with timestamp, user ID, and session ID, and an alert fires on a test threshold breach `[CRITICAL]` `[COMPLIANCE]` `[OWASP-A09]`
 - [ ] Incident response runbook written `[CRITICAL]` `[COMPLIANCE]` `[NIST-MG]`
 - [ ] Debug endpoints removed or gated `[CRITICAL]` `[OWASP-A05]`
+- [ ] If the AI can act (tools, memory, code, delegation): all section 12 CRITICAL items addressed, and indirect injection tested against every tool-enabled flow `[CRITICAL]` `[AI THREAT]` `[ASI01]` `[ASI02]`
 
 ---
 
@@ -291,6 +340,7 @@ See `web-app-ai/attack-scenarios.md` for real-world examples of how each vulnera
 ## References
 
 - [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [OWASP Top 10 for Agentic Applications](https://genai.owasp.org/)
 - [OWASP Web Security Testing Guide (WSTG)](https://owasp.org/www-project-web-security-testing-guide/)
 - [MITRE ATLAS](https://atlas.mitre.org/)
 - [MITRE ATT&CK](https://attack.mitre.org/)
